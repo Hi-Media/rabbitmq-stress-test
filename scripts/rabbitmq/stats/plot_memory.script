@@ -1,0 +1,42 @@
+#!/usr/bin/gnuplot
+#
+# Copyright (c) 2013 Hi-Media SA
+# Copyright (c) 2013 Geoffroy Aubry <gaubry@hi-media.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+# for the specific language governing permissions and limitations under the License.
+#
+
+set datafile separator ","
+set term pngcairo size 1200,800 enhanced
+set termoption dashed
+set encoding utf8
+set output output
+set grid xtics ytics
+
+set xlabel "Elapsed time (min:s)"
+set xdata time
+set format x "%M:%S"
+set timefmt "%s"
+
+set ylabel "Memory used in Mio"
+set ytics nomirror
+
+set style fill transparent solid 0.4 border
+set title sprintf("{/*2 Memory activity}\n\nNb. seconds by segment (N): %s  —  Messages multiplication factor (L): %s  —  Durability (1/0): %s", N, L, IS_DURABLE) font ",9"
+set key horizontal
+set xrange ["0":xrangemax]
+
+plot \
+    mem_a     using 1:5 title 'Queuing server A' with filledcurves y1=0 lt 1 lw 1 lc rgb "#0072B2" axis x1y1, \
+    mem_b     using 1:5 title 'Queuing server B' with filledcurves y1=0 lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    mem_local using 1:5 title 'Producers \& consumers server' with filledcurves y1=0 lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    mem_a     using 1:5 notitle with lines lt 1 lw 1 lc rgb "#0072B2" axis x1y1, \
+    mem_b     using 1:5 notitle with lines lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    mem_local using 1:5 notitle  with lines lt 1 lw 1 lc rgb "#009E73" axis x1y1

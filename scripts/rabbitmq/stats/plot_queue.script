@@ -1,0 +1,50 @@
+#!/usr/bin/gnuplot
+#
+# Copyright (c) 2013 Hi-Media SA
+# Copyright (c) 2013 Geoffroy Aubry <gaubry@hi-media.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+# for the specific language governing permissions and limitations under the License.
+#
+
+#set datafile separator ","
+set term pngcairo size 1200,800 enhanced
+set termoption dashed
+set encoding utf8
+set output output
+set grid xtics ytics
+
+set xlabel "Elapsed time (min:s)"
+set xdata time
+set format x "%M:%S"
+set timefmt "%s"
+
+set ylabel "Produced or consumed messages / s"
+set ytics nomirror
+
+set y2label "Queue size"
+set format y2 "%.0fK"
+set y2tics nomirror
+
+set style fill transparent solid 0.4 border
+set title sprintf("{/*2 Queue activity}\n\nNb. seconds by segment (N): %s  —  Messages multiplication factor (L): %s  —  Durability (1/0): %s", N, L, IS_DURABLE) font ",9"
+set key bmargin center Right horizontal
+set xrange ["0":xrangemax]
+# set yrange ["0":maxnbtasks]
+
+plot \
+    csv using 1:2:($4+$5) title "Producer 1" with filledcurves above lt 1 lw 1 lc 3 fill transparent solid 0.3 border axis x1y1, \
+    ''  using 1:($2+$3):(($2 > $4+$5) ? $2 : $4+$5) title "   Producers 1+2" with filledcurves above fill lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''  using 1:4 title "Consumer 1" with filledcurves y1=0 fill lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''  using 1:($4+$5):4 title "   Consumers 1+2" with filledcurves above fill lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    ''  using 1:2 notitle with lines lt 1 lw 1 lc 3 axis x1y1, \
+    ''  using 1:($2+$3) notitle with lines lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''  using 1:4 notitle with lines lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''  using 1:($4+$5) notitle with lines lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    ''  using 1:($6/1000) title "Queue size" with lines lt 1 lw 2 lc rgb "#000000" axis x1y2
