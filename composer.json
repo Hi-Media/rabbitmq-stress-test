@@ -1,0 +1,22 @@
+{
+    "name": "hi-media/rabbitmq-stress-test",
+    "description": "Stress test a RabbitMQ cluster",
+    "keywords": ["RabbitMQ", "Queuing", "Cluster", "High availability", "PHP"],
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name":  "Geoffroy Aubry",
+            "email": "gaubry@hi-media.com"
+        }
+    ],
+    "require": {
+        "videlalvaro/php-amqplib"    : "2.*",
+        "geoffroy-aubry/errorhandler": "1.*",
+        "geoffroy-aubry/logger"      : "1.*",
+        "php"                        : ">=5.3.3",
+        "ulrichsg/getopt-php"        : "dev-master"
+    },
+    "autoload": {
+        "psr-0": {"Himedia": "src/"}
+    }
+}

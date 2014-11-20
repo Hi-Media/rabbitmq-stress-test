@@ -1,2 +1,12 @@
-/.twgit_features_subject
-/.twgit
+/.settings
+/.buildpath
+/.project
+/build/
+/output/
+*~
+/vendor/
+composer.phar
+/cache.properties
+/.twgit*
+/.idea/
+/conf/queuing.php

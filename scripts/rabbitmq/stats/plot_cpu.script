@@ -1,0 +1,104 @@
+#!/usr/bin/gnuplot
+#
+# Copyright (c) 2013 Hi-Media SA
+# Copyright (c) 2013 Geoffroy Aubry <gaubry@hi-media.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+# for the specific language governing permissions and limitations under the License.
+#
+
+set datafile separator ","
+set term pngcairo size 1200,800 enhanced
+set termoption dashed
+set encoding utf8
+set output output
+set grid xtics ytics
+
+set multiplot layout 3,1 title sprintf("{/*2 CPU activity}\n\nNb. seconds by segment (N): %s  —  Msg multiplication factor (L): %s  —  Durability (1/0): %s", N, L, IS_DURABLE) font ",9"
+
+set notitle
+set size 1, 0.28
+set origin 0, 0.65
+set label 1 'Queuing server A' at graph 0.02,0.91 font ',13'
+set bmargin 0
+set xdata time
+set format x "%M:%S"
+set timefmt "%s"
+
+set ylabel "%CPU" offset 1,0
+set ytics nomirror font ",9"
+
+set style fill transparent solid 0.4 border
+set key horizontal
+set xtics format " "
+set xrange ["0":xrangemax]
+set yrange ["0":"100"]
+
+
+plot \
+    cpu_a using 1:($2+$4+$5) notitle smooth sbezier lt 2 lw 1 lc rgb "#666666" axis x1y1, \
+    ''    using 1:5 title "%iowait" with filledcurves x1 fill lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''    using 1:($4+$5):5 title "   %system" with filledcurves above fill lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''    using 1:($2+$4+$5):($4+$5) title "%user" with filledcurves  fill lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    ''    using 1:5 notitle with lines lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''    using 1:($4+$5) notitle with lines lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''    using 1:($2+$4+$5) notitle with lines lt 1 lw 1 lc rgb "#009E73" axis x1y1
+
+
+set size 1, 0.28
+set origin 0, 0.368
+set label 1 'Queuing server B' at graph 0.02,0.91 font ',13'
+set bmargin 0
+set xdata time
+set format x "%M:%S"
+set timefmt "%s"
+
+set ylabel "%CPU"
+set ytics nomirror
+
+set style fill transparent solid 0.4 border
+unset key
+set xtics format " "
+
+
+plot \
+    cpu_b using 1:($2+$4+$5) notitle smooth sbezier lt 2 lw 1 lc rgb "#666666" axis x1y1, \
+    ''    using 1:5 title "%iowait" with filledcurves x1 fill lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''    using 1:($4+$5):5 title "%system" with filledcurves above fill lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''    using 1:($2+$4+$5):($4+$5) title "%user" with filledcurves  fill lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    ''    using 1:5 notitle with lines lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''    using 1:($4+$5) notitle with lines lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''    using 1:($2+$4+$5) notitle with lines lt 1 lw 1 lc rgb "#009E73" axis x1y1
+
+
+
+set size 1, 0.364
+set origin 0, 0
+set label 1 'Producers \& consumers server' at graph 0.02,0.91 font ',13'
+set bmargin 3.5
+set xlabel "Elapsed time (min:s)"
+set xdata time
+set format x "%M:%S"
+set timefmt "%s"
+
+set ylabel "%CPU"
+set ytics nomirror
+
+set style fill transparent solid 0.4 border
+unset key
+set xtics
+
+plot \
+    cpu_local using 1:($2+$4+$5) notitle smooth sbezier lt 2 lw 1 lc rgb "#666666" axis x1y1, \
+    ''        using 1:5 title "%iowait" with filledcurves x1 fill lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''        using 1:($4+$5):5 title "%system" with filledcurves above fill lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''        using 1:($2+$4+$5):($4+$5) title "%user" with filledcurves  fill lt 1 lw 1 lc rgb "#009E73" axis x1y1, \
+    ''        using 1:5 notitle with lines lt 1 lw 1 lc rgb "#F0E442" axis x1y1, \
+    ''        using 1:($4+$5) notitle with lines lt 1 lw 1 lc rgb "#9400D3" axis x1y1, \
+    ''        using 1:($2+$4+$5) notitle with lines lt 1 lw 1 lc rgb "#009E73" axis x1y1
