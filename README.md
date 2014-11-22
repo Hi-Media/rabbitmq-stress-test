@@ -15,7 +15,8 @@
   
 ## Overview
 
-Here is a scenario and its PHP implementation to stress test a [RabbitMQ](http://www.rabbitmq.com) cluster 
+Here is a scenario and its PHP implementation (using [php-amqplib](https://github.com/videlalvaro/php-amqplib))
+to stress test a [RabbitMQ](http://www.rabbitmq.com) cluster
 with [highly available queues](https://www.rabbitmq.com/ha.html).
 
 A variable number of both producers and consumers will interact with a mirrored queue across the two nodes of a cluster.
